@@ -1,5 +1,15 @@
+
+
+
+
+
+
 GET http://localhost:3000/players/
 ###
+
+
+
+
 
 POST http://localhost:3000/players/12/
 Content-Type: application/json
@@ -12,8 +22,14 @@ Content-Type: application/json
 ###
 
 
-PUT http://localhost:3000/players/7/
 
+GET http://localhost:3000/players/11/
+###
+
+
+
+PUT http://localhost:3000/players/15/
+Content-Type: application/json;
 
 {
   "playerName": "Maneesh",
@@ -22,15 +38,8 @@ PUT http://localhost:3000/players/7/
 }
 
 ###
-GET http://localhost:3000/players/1/
-###
 
 
 
-DELETE http://localhost:3000/players/5/
-
-
-###
-
-GET http://localhost:3000/players/
+DELETE http://localhost:3000/players/13/
 ###
