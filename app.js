@@ -27,7 +27,7 @@ const initializeDBAndServer = async () => {
 };
 initializeDBAndServer();
 
-/* GET Players */
+/* GET players */
 
 app.get("/players/", async (request, response) => {
   const convertDbObjectToResponseObject = (eachPlayer) => {
@@ -49,9 +49,18 @@ app.get("/players/", async (request, response) => {
   );
 });
 
-/* POST Player */
+/* POST player */
 
 app.post("/players/:playerId/", async (request, response) => {
+  const convertDbObjectToResponseObject = (eachPlayer) => {
+    return {
+      playerId: eachPlayer.player_id,
+      playerName: eachPlayer.player_name,
+      jerseyNumber: eachPlayer.jersey_number,
+      role: eachPlayer.role,
+    };
+  };
+
   const playerDetails = request.body;
   const { playerName, jerseyNumber, role } = playerDetails;
   const addPlayerList = `
@@ -64,38 +73,37 @@ app.post("/players/:playerId/", async (request, response) => {
          '${role}'
       );`;
 
-  const dbResponse = await db.run(addPlayerList);
-  const playerId = dbResponse.lastID;
+  await db.run(addPlayerList);
 
-  response.send({ player_id: playerId });
+  response.send("Player Added to Team");
 });
 
-/* GET Player */
+/* GET player */
 
 app.get("/players/:playerId/", async (request, response) => {
   const convertDbObjectToResponseObject = (eachPlayer) => {
     return {
-      playerId: eachPlayer.player_id,
       playerName: eachPlayer.player_name,
       jerseyNumber: eachPlayer.jersey_number,
       role: eachPlayer.role,
     };
   };
+
   const { playerId } = request.params;
-  const getPlayers = `
+  const getPlayer = `
     SELECT
       *
     FROM
       cricket_team
     WHERE
       player_id = ${playerId};`;
-  const playersList = await db.all(getPlayers);
+  const playersList = await db.all(getPlayer);
   response.send(
     playersList.map((eachPlayer) => convertDbObjectToResponseObject(eachPlayer))
   );
 });
 
-/* PUT Player */
+/* PUT player */
 
 app.put("/players/:playerId/", async (request, response) => {
   const { playerId } = request.params;
@@ -106,7 +114,7 @@ app.put("/players/:playerId/", async (request, response) => {
       cricket_team
     SET
       player_name='${playerName}',
-      jersey_number=${jerseyNumber},
+      jersey_number	=${jerseyNumber},
       role='${role}'
     WHERE
       player_id = ${playerId};`;
@@ -114,15 +122,15 @@ app.put("/players/:playerId/", async (request, response) => {
   response.send("Player Details Updated");
 });
 
-/* DELETE Player */
+/* DELETE player */
 
 app.delete("/players/:playerId/", async (request, response) => {
   const { playerId } = request.params;
-  const deleteplayerQuery = `
+  const deletePlayerQuery = `
     DELETE FROM
       cricket_team
     WHERE
       player_id = ${playerId};`;
-  await db.run(deleteplayerQuery);
+  await db.run(deletePlayerQuery);
   response.send("Player Removed");
 });
